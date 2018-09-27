@@ -16,7 +16,8 @@ public class Processing extends PApplet {
     boolean              collidingP = false;
     int                  x1         = 30;                        // random( 0,
                                                                  // 1300 );
-    int                  y1         = 840;                       // random( 0,
+    int                  y1         = 840;   
+    boolean jump; 															// random( 0,
                                                                  // 900 );
     ArrayList<Rectangle> rect       = new ArrayList<Rectangle>();
     Rectangle            player;
@@ -81,6 +82,10 @@ public class Processing extends PApplet {
         if ( player.x < -32 ) {
             player.x = width;
         }
+        if (collidingP && jump != false)
+        {
+          player.y -= 100;
+        }
 
         for ( int i = 0; i < rect.size(); i++ ) {
             final Rectangle r = rect.get( i );
@@ -111,7 +116,7 @@ public class Processing extends PApplet {
         }
         if ( key == ' ' ) {
             if ( collidingP ) {
-                player.y -= 20;
+                jump = true;
             }
         }
     }
@@ -123,6 +128,9 @@ public class Processing extends PApplet {
         }
         if ( key == 'd' ) {
             moving = 0;
+        }
+        if ( key == ' ' ) {
+            jump = false;
         }
     }
 
