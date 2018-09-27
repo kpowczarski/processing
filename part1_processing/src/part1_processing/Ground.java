@@ -13,8 +13,13 @@ public class Ground {
         ground = new PVector( x, y );
     }
 
-    boolean collide ( final PVector p ) {
-        if ( p.x > ground.x && p.y > ground.y && p.x < ground.x + 100 && p.y < ground.y + 10 ) {
+    void show () {
+        parent.stroke( 255 );
+        parent.line( ground.x - parent.width, ground.y, ground.x + parent.width, ground.y );
+    }
+
+    boolean collide ( final int x, final int y ) {
+        if ( x > ground.x - parent.width && y > ground.y && x < ground.x + parent.width && y < ground.y + 10 ) {
             return true;
         }
         return false;
