@@ -27,6 +27,8 @@ public class Processing extends PApplet {
     boolean              jump;                                   // random( 0,
     // 900 );
     ArrayList<Rectangle> rect       = new ArrayList<Rectangle>();
+    float velxs[];
+    float velys[];
     Rectangle            player;
 
     public static void main ( final String[] args ) {
@@ -47,8 +49,16 @@ public class Processing extends PApplet {
         velx = 0;
         rVely = 0;
         rVelx = 0;
+        velxs = new float[5];
+        velys = new float[5];
+        velxs[0] = 0;
+        velys[0] = 0;
         gravity = 0.5;
         rect.add( new Rectangle( 60, 800, 32, 32 ) );
+        rect.add( new Rectangle( 160, 800, 32, 32 ) );
+        rect.add( new Rectangle( 260, 800, 32, 32 ) );
+        rect.add( new Rectangle( 560, 800, 32, 32 ) );
+        rect.add( new Rectangle( 960, 800, 32, 32 ) );
         c = new Rectangle( 0, 0, 1300, 10 );
         // rect.add( new Rectangle( 0, 890, 900, 10) );
         x1 = (int) pos.x;
@@ -107,25 +117,25 @@ public class Processing extends PApplet {
         for ( int i = 0; i < rect.size(); i++ ) {
             final Rectangle r = rect.get( i );
             if ( r.intersects( player ) ) {
-                if ( rVelx < 0 && velx < 0 ) {
-                    rVelx += velx;
+                if ( velxs[i] < 0 && velx < 0 ) {
+                	velxs[i] += velx;
                 }
-                else if ( rVelx > 0 && velx > 0 ) {
-                    rVelx += velx;
-                }
-                else {
-                    rVelx *= -1;
-                    rVelx += velx;
-                }
-                if ( rVely < 0 && vely < 0 ) {
-                    rVely += vely;
-                }
-                else if ( rVely > 0 && vely > 0 ) {
-                    rVely += vely;
+                else if ( velxs[i] > 0 && velx > 0 ) {
+                	velxs[i] += velx;
                 }
                 else {
-                    rVely *= -1;
-                    rVely += vely;
+                	velxs[i] *= -1;
+                	velxs[i] += velx;
+                }
+                if ( velys[i] < 0 && vely < 0 ) {
+                	velys[i] += vely;
+                }
+                else if ( velys[i] > 0 && vely > 0 ) {
+                	velys[i] += vely;
+                }
+                else {
+                	velys[i] *= -1;
+                	velys[i] += vely;
                 }
 
                 // rVely *= -1;
@@ -133,25 +143,31 @@ public class Processing extends PApplet {
 
             }
             // rVely += gravity;
-            if ( rVelx > 10 ) {
-                rVelx = 10;
+            if ( velxs[i] > 10 ) {
+            	velxs[i] = 10;
             }
-            if ( rVelx < -10 ) {
-                rVelx = -10;
+            if ( velxs[i] < -10 ) {
+            	velxs[i] = -10;
             }
 
-            if ( rVely > 10 ) {
-                rVely = 10;
+            if ( velys[i] > 10 ) {
+            	velys[i] = 10;
             }
-            if ( rVely < -10 ) {
-                rVely = -10;
+            if ( velys[i] < -10 ) {
+            	velys[i] = -10;
             }
-            r.y += rVely;
+            if ( r.y > 858 ) {
+            	r.y = 858;
+            }
+            if (r.y < 10) {
+            	r.y = 10;
+            }
+            r.y += velys[i];
             if ( g.intersects( r ) ) {
-                rVely *= -1;
+                velys[i] *= -1;
             }
             if ( c.intersects( r ) ) {
-                rVely *= -1;
+                velys[i] *= -1;
             }
             if ( r.x > width ) {
                 r.x = -32;
@@ -159,7 +175,7 @@ public class Processing extends PApplet {
             if ( r.x < -32 ) {
                 r.x = width;
             }
-            r.x += rVelx;
+            r.x += velxs[i];
             fill( 0, 255, 0 );
             rect( r.x, r.y, r.width, r.height );
             // fill( 0, 255, 0 );
