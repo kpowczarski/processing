@@ -133,25 +133,46 @@ public class Processing extends PApplet {
                 justCol = true;
 
             }
-            // rVely += gravity;
-            if ( velxs[i] > 10 ) {
-            	velxs[i] = 10;
+            for (int j = 0; j <rect.size(); j++) {
+	            if (j != i) {	
+            		if( r.intersects(rect.get(j))) {
+            			if (velys[i] == 0 && velys[j] == 0) {
+            				velys[i] += 1;
+            				velys[j] += 1;
+            			}
+            			if (velys[i] == 0) {
+            				velys[i] += velys[j];
+            			}
+            			if (velys[j] == 0) {
+            				velys[j] += velys[i];
+            			}
+            			velxs[i] *= -1;
+            			velxs[j] *= -1;
+            			velys[i] *= -1;
+            			velys[j] *= -1;
+	            	}
+	            }
             }
-            if ( velxs[i] < -10 ) {
-            	velxs[i] = -10;
+            // rVely += gravity;
+            if ( velxs[i] > 7 ) {
+            	velxs[i] = 7;
+            }
+            if ( velxs[i] < -7 ) {
+            	velxs[i] = -7;
             }
 
-            if ( velys[i] > 10 ) {
-            	velys[i] = 10;
+            if ( velys[i] > 7 ) {
+            	velys[i] = 7;
             }
-            if ( velys[i] < -10 ) {
-            	velys[i] = -10;
+            if ( velys[i] < -7 ) {
+            	velys[i] = -7;
             }
             if ( r.y > 858 ) {
             	r.y = 858;
             }
             if (r.y < 10) {
             	r.y = 10;
+            	velys[i] += 1;
             }
             r.y += velys[i];
             if ( g.intersects( r ) ) {
