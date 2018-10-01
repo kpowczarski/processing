@@ -21,11 +21,12 @@ public class Processing extends PApplet {
     float                walk       = 5;
     boolean              collidingP = false;
     boolean              walking    = false;
-    int                  x1         = 30;                        // random( 0,
-                                                                 // 1300 );
+    int                  x1         = 30;                        
     int                  y1         = 840;
-    boolean              jump;                                   // random( 0,
-    // 900 );
+    boolean              jump;                                   
+    float rC;
+    float gC;
+    float bC;
     ArrayList<Rectangle> rect       = new ArrayList<Rectangle>();
     float velxs[];
     float velys[];
@@ -43,22 +44,28 @@ public class Processing extends PApplet {
 
     @Override
     public void setup () {
-        // g = new Ground( this, width / 2, height - 20 );
         pos = new PVector( width / 2 + 40, height / 2 - 100 );
         vely = 3;
         velx = 0;
         rVely = 0;
         rVelx = 0;
-        velxs = new float[5];
-        velys = new float[5];
-        velxs[0] = 0;
-        velys[0] = 0;
+        rC = random(0, 255);
+        gC = random(0, 255);
+        bC = random(0, 255);
+        velxs = new float[10];
+        velys = new float[10];
+        for (int i = 0; i < 7; i++) {
+        	velxs[i] = random(-5, 5);
+            velys[i] = random(-5, 5);
+        }
         gravity = 0.5;
         rect.add( new Rectangle( 60, 800, 32, 32 ) );
         rect.add( new Rectangle( 160, 800, 32, 32 ) );
         rect.add( new Rectangle( 260, 800, 32, 32 ) );
         rect.add( new Rectangle( 560, 800, 32, 32 ) );
         rect.add( new Rectangle( 960, 800, 32, 32 ) );
+        rect.add( new Rectangle( 1060, 800, 32, 32 ) );
+        rect.add( new Rectangle( 1160, 800, 32, 32 ) );
         c = new Rectangle( 0, 0, 1300, 10 );
         // rect.add( new Rectangle( 0, 890, 900, 10) );
         x1 = (int) pos.x;
@@ -70,40 +77,24 @@ public class Processing extends PApplet {
 
     @Override
     public void draw () {
-        // for ( int i = 0; i < 6; i++ ) {
-        // rect( ( i * 175 ) + 150, 150, 150, 150 );
-        // }
         background( 51 );
-        fill( 255, 0, 0 );
-        // g.show();
         collidingP = false;
         vely += gravity;
         player.y += vely;
         if ( vely > 5 ) {
             vely = 5;
         }
-        // if ( g.collide( player.x, player.y ) ) {
-        // collidingP = true;
-        // player.y = (int) g.ground.y;
-        // }
         if ( g.intersects( player ) ) {
             collidingP = true;
             player.y = g.y - 32;
         }
+        fill( 0, 0, 0 );
         rect( g.x, g.y, 1300, 10 );
         rect( c.x, c.y, 1300, 10 );
         stroke( 0 );
+        fill( 255, 0, 0 );
         rect( player.x, player.y, 32, 32 );
-        // rect( pos.x, pos.y - 32, 32, 32 );
-        // if ( !collidingP ) {
-        // vel.y += .5;
-        // player.y += 3;
-        // }
-        // pos.add( vel );
-        // player.x = (int) pos.x;
-        // player.y = (int) pos.y;
         player.x += velx;
-        // vel.mult( (float) .9 );
         if ( player.x > width ) {
             player.x = -32;
         }
@@ -176,16 +167,8 @@ public class Processing extends PApplet {
                 r.x = width;
             }
             r.x += velxs[i];
-            fill( 0, 255, 0 );
+            fill( rC, gC, bC );
             rect( r.x, r.y, r.width, r.height );
-            // fill( 0, 255, 0 );
-
-            // rect( x1, y1, 32, 32 );
-            // if ( pos.x < x1 + 32 && pos.x > x1 && pos.y < y1 + 32 && pos.y >
-            // y1 ) {
-            // collidingP = true;
-            // pos.x = x1 + 32;
-            // x1 += moving;
 
         }
     }
