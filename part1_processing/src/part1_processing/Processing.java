@@ -73,7 +73,7 @@ public class Processing extends PApplet {
         // rect.add( new Rectangle( 0, 890, 900, 10) );
         x1 = (int) pos.x;
         y1 = (int) pos.y;
-        ob = new Rectangle( 30, 800, 32, 50 );
+        ob = new Rectangle( 30, 800, 100, 100 );
         g = new Rectangle( 0, 890, 1300, 10 );
         player = new Rectangle( x1, y1, 32, 32 );
         // fill( 120, 50, 240 );
@@ -98,8 +98,13 @@ public class Processing extends PApplet {
         }
         if ( player.intersects( ob ) ) {
             if ( player.y > ob.y ) {
-                vely *= -1;
-                velx *= -1;
+                if ( player.y > ob.y && player.y < ob.y + 100 ) {
+                    velx *= -1;
+                }
+                else {
+                    vely *= -1;
+                    velx *= -1;
+                }
                 re = true;
 
             }
@@ -110,7 +115,7 @@ public class Processing extends PApplet {
             }
         }
         fill( 0, 0, 0 );
-        rect( ob.x, ob.y, 32, 50 );
+        rect( ob.x, ob.y, 100, 100 );
         rect( g.x, g.y, 1300, 10 );
         rect( c.x, c.y, 1300, 10 );
         stroke( 0 );
