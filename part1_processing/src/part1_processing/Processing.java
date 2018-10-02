@@ -10,6 +10,7 @@ public class Processing extends PApplet {
 
     Rectangle            g;
     Rectangle            c;
+    Rectangle            ob;
     PVector              pos;
     float                velx;
     float                vely;
@@ -21,15 +22,16 @@ public class Processing extends PApplet {
     float                walk       = 5;
     boolean              collidingP = false;
     boolean              walking    = false;
-    int                  x1         = 30;                        
+    int                  x1         = 30;
     int                  y1         = 840;
-    boolean              jump;                                   
-    float rC;
-    float gC;
-    float bC;
+    boolean              jump;
+    boolean              re;
+    float                rC;
+    float                gC;
+    float                bC;
     ArrayList<Rectangle> rect       = new ArrayList<Rectangle>();
-    float velxs[];
-    float velys[];
+    float                velxs[];
+    float                velys[];
     Rectangle            player;
 
     public static void main ( final String[] args ) {
@@ -49,14 +51,15 @@ public class Processing extends PApplet {
         velx = 0;
         rVely = 0;
         rVelx = 0;
-        rC = random(0, 255);
-        gC = random(0, 255);
-        bC = random(0, 255);
+        re = false;
+        rC = random( 0, 255 );
+        gC = random( 0, 255 );
+        bC = random( 0, 255 );
         velxs = new float[10];
         velys = new float[10];
-        for (int i = 0; i < 7; i++) {
-        	velxs[i] = random(-5, 5);
-            velys[i] = random(-5, 5);
+        for ( int i = 0; i < 7; i++ ) {
+            velxs[i] = random( -5, 5 );
+            velys[i] = random( -5, 5 );
         }
         gravity = 0.5;
         rect.add( new Rectangle( 60, 800, 32, 32 ) );
@@ -70,6 +73,7 @@ public class Processing extends PApplet {
         // rect.add( new Rectangle( 0, 890, 900, 10) );
         x1 = (int) pos.x;
         y1 = (int) pos.y;
+        ob = new Rectangle( 30, 800, 32, 50 );
         g = new Rectangle( 0, 890, 1300, 10 );
         player = new Rectangle( x1, y1, 32, 32 );
         // fill( 120, 50, 240 );
@@ -78,6 +82,10 @@ public class Processing extends PApplet {
     @Override
     public void draw () {
         background( 51 );
+        if ( re ) {
+            velx = 0;
+        }
+        re = false;
         collidingP = false;
         vely += gravity;
         player.y += vely;
@@ -88,7 +96,21 @@ public class Processing extends PApplet {
             collidingP = true;
             player.y = g.y - 32;
         }
+        if ( player.intersects( ob ) ) {
+            if ( player.y > ob.y ) {
+                vely *= -1;
+                velx *= -1;
+                re = true;
+
+            }
+            else {
+                collidingP = true;
+                player.y = ob.y - 32;
+                vely = 0;
+            }
+        }
         fill( 0, 0, 0 );
+        rect( ob.x, ob.y, 32, 50 );
         rect( g.x, g.y, 1300, 10 );
         rect( c.x, c.y, 1300, 10 );
         stroke( 0 );
@@ -96,10 +118,10 @@ public class Processing extends PApplet {
         rect( player.x, player.y, 32, 32 );
         player.x += velx;
         if ( player.x > width ) {
-            player.x = -32;
+            player.x = -31;
         }
         if ( player.x < -32 ) {
-            player.x = width;
+            player.x = width - 1;
         }
         if ( collidingP && jump != false ) {
             vely = -10;
@@ -109,70 +131,70 @@ public class Processing extends PApplet {
             final Rectangle r = rect.get( i );
             if ( r.intersects( player ) ) {
                 if ( velxs[i] < 0 && velx < 0 ) {
-                	velxs[i] += velx;
+                    velxs[i] += velx;
                 }
                 else if ( velxs[i] > 0 && velx > 0 ) {
-                	velxs[i] += velx;
+                    velxs[i] += velx;
                 }
                 else {
-                	velxs[i] *= -1;
-                	velxs[i] += velx;
+                    velxs[i] *= -1;
+                    velxs[i] += velx;
                 }
                 if ( velys[i] < 0 && vely < 0 ) {
-                	velys[i] += vely;
+                    velys[i] += vely;
                 }
                 else if ( velys[i] > 0 && vely > 0 ) {
-                	velys[i] += vely;
+                    velys[i] += vely;
                 }
                 else {
-                	velys[i] *= -1;
-                	velys[i] += vely;
+                    velys[i] *= -1;
+                    velys[i] += vely;
                 }
 
                 // rVely *= -1;
                 justCol = true;
 
             }
-            for (int j = 0; j <rect.size(); j++) {
-	            if (j != i) {	
-            		if( r.intersects(rect.get(j))) {
-            			if (velys[i] == 0 && velys[j] == 0) {
-            				velys[i] += 1;
-            				velys[j] += 1;
-            			}
-            			if (velys[i] == 0) {
-            				velys[i] += velys[j];
-            			}
-            			if (velys[j] == 0) {
-            				velys[j] += velys[i];
-            			}
-            			velxs[i] *= -1;
-            			velxs[j] *= -1;
-            			velys[i] *= -1;
-            			velys[j] *= -1;
-	            	}
-	            }
+            for ( int j = 0; j < rect.size(); j++ ) {
+                if ( j != i ) {
+                    if ( r.intersects( rect.get( j ) ) ) {
+                        if ( velys[i] == 0 && velys[j] == 0 ) {
+                            velys[i] += 1;
+                            velys[j] += 1;
+                        }
+                        if ( velys[i] == 0 ) {
+                            velys[i] += velys[j];
+                        }
+                        if ( velys[j] == 0 ) {
+                            velys[j] += velys[i];
+                        }
+                        velxs[i] *= -1;
+                        velxs[j] *= -1;
+                        velys[i] *= -1;
+                        velys[j] *= -1;
+                    }
+                }
             }
             // rVely += gravity;
             if ( velxs[i] > 7 ) {
-            	velxs[i] = 7;
+                velxs[i] = 7;
             }
             if ( velxs[i] < -7 ) {
-            	velxs[i] = -7;
+                velxs[i] = -7;
             }
 
             if ( velys[i] > 7 ) {
-            	velys[i] = 7;
+                velys[i] = 7;
             }
             if ( velys[i] < -7 ) {
-            	velys[i] = -7;
+                velys[i] = -7;
             }
             if ( r.y > 858 ) {
-            	r.y = 858;
+                r.y = 858;
             }
-            if (r.y < 10) {
-            	r.y = 10;
-            	velys[i] += 1;
+            if ( r.y < 10 ) {
+                r.y = 10;
+                velys[i] += 1;
             }
             r.y += velys[i];
             if ( g.intersects( r ) ) {
@@ -197,8 +219,11 @@ public class Processing extends PApplet {
     @Override
     public void keyPressed () {
         if ( key == 'a' ) {
-            velx = -walk;
-            walking = true;
+            if ( !re ) {
+                velx = -walk;
+                walking = true;
+            }
+
         }
         if ( key == 'd' ) {
             velx = walk;
